@@ -2,7 +2,6 @@ package com.example.subscriptions.infrastructure.adapter.out.persistence.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,11 +16,9 @@ public class SubscriptionJpaEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserJpaEntity user;
 
-    @Column(nullable = false)
-    private String subscriptionType;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_type_id", nullable = false)
+    private SubscriptionTypeJpaEntity subscriptionType;
 
     @Column(nullable = false)
     private String status;
@@ -68,20 +65,12 @@ public class SubscriptionJpaEntity {
         this.user = user;
     }
 
-    public String getSubscriptionType() {
+    public SubscriptionTypeJpaEntity getSubscriptionType() {
         return subscriptionType;
     }
 
-    public void setSubscriptionType(String subscriptionType) {
+    public void setSubscriptionType(SubscriptionTypeJpaEntity subscriptionType) {
         this.subscriptionType = subscriptionType;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public String getStatus() {

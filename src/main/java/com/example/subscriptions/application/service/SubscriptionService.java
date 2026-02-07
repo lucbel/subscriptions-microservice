@@ -1,12 +1,15 @@
 package com.example.subscriptions.application.service;
 
 import com.example.subscriptions.domain.exception.SubscriptionNotFoundException;
+import com.example.subscriptions.domain.exception.SubscriptionTypeNotFoundException;
 import com.example.subscriptions.domain.exception.UserNotFoundException;
 import com.example.subscriptions.domain.model.Subscription;
 import com.example.subscriptions.domain.model.SubscriptionStatus;
+import com.example.subscriptions.domain.model.SubscriptionType;
 import com.example.subscriptions.domain.model.User;
 import com.example.subscriptions.domain.port.in.*;
 import com.example.subscriptions.domain.port.out.SubscriptionRepositoryPort;
+import com.example.subscriptions.domain.port.out.SubscriptionTypeRepositoryPort;
 import com.example.subscriptions.domain.port.out.UserRepositoryPort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +27,14 @@ public class SubscriptionService implements
 
     private final SubscriptionRepositoryPort subscriptionRepository;
     private final UserRepositoryPort userRepository;
+    private final SubscriptionTypeRepositoryPort subscriptionTypeRepository;
 
     public SubscriptionService(SubscriptionRepositoryPort subscriptionRepository,
-                               UserRepositoryPort userRepository) {
+                               UserRepositoryPort userRepository,
+                               SubscriptionTypeRepositoryPort subscriptionTypeRepository) {
         this.subscriptionRepository = subscriptionRepository;
         this.userRepository = userRepository;
+        this.subscriptionTypeRepository = subscriptionTypeRepository;
     }
 
     @Override
@@ -36,10 +42,12 @@ public class SubscriptionService implements
         User user = userRepository.findById(command.userId())
                 .orElseThrow(() -> new UserNotFoundException(command.userId()));
 
+        SubscriptionType subscriptionType = subscriptionTypeRepository.findById(command.subscriptionTypeId())
+                .orElseThrow(() -> new SubscriptionTypeNotFoundException(command.subscriptionTypeId()));
+
         Subscription subscription = Subscription.create(
                 user,
-                command.subscriptionType(),
-                command.price(),
+                subscriptionType,
                 command.startDate(),
                 command.endDate()
         );
@@ -80,9 +88,11 @@ public class SubscriptionService implements
     public Subscription updateSubscription(Long id, UpdateSubscriptionCommand command) {
         Subscription subscription = getSubscriptionById(id);
 
+        SubscriptionType subscriptionType = subscriptionTypeRepository.findById(command.subscriptionTypeId())
+                .orElseThrow(() -> new SubscriptionTypeNotFoundException(command.subscriptionTypeId()));
+
         subscription.update(
-                command.subscriptionType(),
-                command.price(),
+                subscriptionType,
                 command.status(),
                 command.startDate(),
                 command.endDate()

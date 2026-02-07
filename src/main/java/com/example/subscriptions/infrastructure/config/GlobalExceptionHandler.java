@@ -1,6 +1,8 @@
 package com.example.subscriptions.infrastructure.config;
 
+import com.example.subscriptions.domain.exception.InvalidCredentialsException;
 import com.example.subscriptions.domain.exception.SubscriptionNotFoundException;
+import com.example.subscriptions.domain.exception.SubscriptionTypeNotFoundException;
 import com.example.subscriptions.domain.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleUserNotFound(UserNotFoundException ex) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage());
+    }
+
+    @ExceptionHandler(SubscriptionTypeNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleSubscriptionTypeNotFound(SubscriptionTypeNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "Not Found", ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidCredentials(InvalidCredentialsException ex) {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, "Unauthorized", ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

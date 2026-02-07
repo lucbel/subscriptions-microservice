@@ -69,8 +69,7 @@ public class SubscriptionController {
     public ResponseEntity<SubscriptionResponse> createSubscription(@Valid @RequestBody SubscriptionRequest request) {
         var command = new CreateSubscriptionUseCase.CreateSubscriptionCommand(
                 request.userId(),
-                request.subscriptionType(),
-                request.price(),
+                request.subscriptionTypeId(),
                 request.status(),
                 request.startDate(),
                 request.endDate()
@@ -84,8 +83,7 @@ public class SubscriptionController {
             @PathVariable Long id,
             @Valid @RequestBody UpdateSubscriptionRequest request) {
         var command = new UpdateSubscriptionUseCase.UpdateSubscriptionCommand(
-                request.subscriptionType(),
-                request.price(),
+                request.subscriptionTypeId(),
                 request.status(),
                 request.startDate(),
                 request.endDate()

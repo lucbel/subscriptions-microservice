@@ -2,9 +2,7 @@ package com.example.subscriptions.domain.port.in;
 
 import com.example.subscriptions.domain.model.Subscription;
 import com.example.subscriptions.domain.model.SubscriptionStatus;
-import com.example.subscriptions.domain.model.SubscriptionType;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public interface CreateSubscriptionUseCase {
@@ -13,8 +11,7 @@ public interface CreateSubscriptionUseCase {
 
     record CreateSubscriptionCommand(
             Long userId,
-            SubscriptionType subscriptionType,
-            BigDecimal price,
+            Long subscriptionTypeId,
             SubscriptionStatus status,
             LocalDateTime startDate,
             LocalDateTime endDate
