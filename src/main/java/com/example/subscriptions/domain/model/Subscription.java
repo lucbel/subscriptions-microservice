@@ -1,6 +1,5 @@
 package com.example.subscriptions.domain.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Subscription {
@@ -8,7 +7,6 @@ public class Subscription {
     private Long id;
     private User user;
     private SubscriptionType subscriptionType;
-    private BigDecimal price;
     private SubscriptionStatus status;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -18,13 +16,12 @@ public class Subscription {
     public Subscription() {
     }
 
-    public Subscription(Long id, User user, SubscriptionType subscriptionType, BigDecimal price,
+    public Subscription(Long id, User user, SubscriptionType subscriptionType,
                         SubscriptionStatus status, LocalDateTime startDate, LocalDateTime endDate,
                         LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.user = user;
         this.subscriptionType = subscriptionType;
-        this.price = price;
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -32,12 +29,11 @@ public class Subscription {
         this.updatedAt = updatedAt;
     }
 
-    public static Subscription create(User user, SubscriptionType subscriptionType, BigDecimal price,
+    public static Subscription create(User user, SubscriptionType subscriptionType,
                                        LocalDateTime startDate, LocalDateTime endDate) {
         Subscription subscription = new Subscription();
         subscription.user = user;
         subscription.subscriptionType = subscriptionType;
-        subscription.price = price;
         subscription.status = SubscriptionStatus.ACTIVE;
         subscription.startDate = startDate != null ? startDate : LocalDateTime.now();
         subscription.endDate = endDate;
@@ -60,10 +56,9 @@ public class Subscription {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(SubscriptionType subscriptionType, BigDecimal price,
-                       SubscriptionStatus status, LocalDateTime startDate, LocalDateTime endDate) {
+    public void update(SubscriptionType subscriptionType, SubscriptionStatus status,
+                       LocalDateTime startDate, LocalDateTime endDate) {
         this.subscriptionType = subscriptionType;
-        this.price = price;
         if (status != null) {
             this.status = status;
         }
@@ -97,14 +92,6 @@ public class Subscription {
 
     public void setSubscriptionType(SubscriptionType subscriptionType) {
         this.subscriptionType = subscriptionType;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public SubscriptionStatus getStatus() {
