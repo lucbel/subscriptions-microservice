@@ -13,11 +13,12 @@ public class SubscriptionJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String userEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserJpaEntity user;
 
     @Column(nullable = false)
-    private String planName;
+    private String subscriptionType;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
@@ -59,20 +60,20 @@ public class SubscriptionJpaEntity {
         this.id = id;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public UserJpaEntity getUser() {
+        return user;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setUser(UserJpaEntity user) {
+        this.user = user;
     }
 
-    public String getPlanName() {
-        return planName;
+    public String getSubscriptionType() {
+        return subscriptionType;
     }
 
-    public void setPlanName(String planName) {
-        this.planName = planName;
+    public void setSubscriptionType(String subscriptionType) {
+        this.subscriptionType = subscriptionType;
     }
 
     public BigDecimal getPrice() {

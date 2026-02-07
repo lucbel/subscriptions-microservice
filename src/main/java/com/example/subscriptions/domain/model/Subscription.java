@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 public class Subscription {
 
     private Long id;
-    private String userEmail;
-    private String planName;
+    private User user;
+    private SubscriptionType subscriptionType;
     private BigDecimal price;
     private SubscriptionStatus status;
     private LocalDateTime startDate;
@@ -18,12 +18,12 @@ public class Subscription {
     public Subscription() {
     }
 
-    public Subscription(Long id, String userEmail, String planName, BigDecimal price,
+    public Subscription(Long id, User user, SubscriptionType subscriptionType, BigDecimal price,
                         SubscriptionStatus status, LocalDateTime startDate, LocalDateTime endDate,
                         LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.userEmail = userEmail;
-        this.planName = planName;
+        this.user = user;
+        this.subscriptionType = subscriptionType;
         this.price = price;
         this.status = status;
         this.startDate = startDate;
@@ -32,11 +32,11 @@ public class Subscription {
         this.updatedAt = updatedAt;
     }
 
-    public static Subscription create(String userEmail, String planName, BigDecimal price,
+    public static Subscription create(User user, SubscriptionType subscriptionType, BigDecimal price,
                                        LocalDateTime startDate, LocalDateTime endDate) {
         Subscription subscription = new Subscription();
-        subscription.userEmail = userEmail;
-        subscription.planName = planName;
+        subscription.user = user;
+        subscription.subscriptionType = subscriptionType;
         subscription.price = price;
         subscription.status = SubscriptionStatus.ACTIVE;
         subscription.startDate = startDate != null ? startDate : LocalDateTime.now();
@@ -60,10 +60,9 @@ public class Subscription {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void update(String userEmail, String planName, BigDecimal price,
+    public void update(SubscriptionType subscriptionType, BigDecimal price,
                        SubscriptionStatus status, LocalDateTime startDate, LocalDateTime endDate) {
-        this.userEmail = userEmail;
-        this.planName = planName;
+        this.subscriptionType = subscriptionType;
         this.price = price;
         if (status != null) {
             this.status = status;
@@ -84,20 +83,20 @@ public class Subscription {
         this.id = id;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getPlanName() {
-        return planName;
+    public SubscriptionType getSubscriptionType() {
+        return subscriptionType;
     }
 
-    public void setPlanName(String planName) {
-        this.planName = planName;
+    public void setSubscriptionType(SubscriptionType subscriptionType) {
+        this.subscriptionType = subscriptionType;
     }
 
     public BigDecimal getPrice() {

@@ -4,6 +4,7 @@ import com.example.subscriptions.domain.model.SubscriptionStatus;
 import com.example.subscriptions.domain.port.in.*;
 import com.example.subscriptions.infrastructure.adapter.in.web.dto.SubscriptionRequest;
 import com.example.subscriptions.infrastructure.adapter.in.web.dto.SubscriptionResponse;
+import com.example.subscriptions.infrastructure.adapter.in.web.dto.UpdateSubscriptionRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,9 +49,9 @@ public class SubscriptionController {
         return ResponseEntity.ok(SubscriptionResponse.fromDomain(subscription));
     }
 
-    @GetMapping("/user/{email}")
-    public ResponseEntity<List<SubscriptionResponse>> getSubscriptionsByUserEmail(@PathVariable String email) {
-        var subscriptions = getSubscriptionUseCase.getSubscriptionsByUserEmail(email).stream()
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<SubscriptionResponse>> getSubscriptionsByUserId(@PathVariable Long userId) {
+        var subscriptions = getSubscriptionUseCase.getSubscriptionsByUserId(userId).stream()
                 .map(SubscriptionResponse::fromDomain)
                 .toList();
         return ResponseEntity.ok(subscriptions);
@@ -67,8 +68,8 @@ public class SubscriptionController {
     @PostMapping
     public ResponseEntity<SubscriptionResponse> createSubscription(@Valid @RequestBody SubscriptionRequest request) {
         var command = new CreateSubscriptionUseCase.CreateSubscriptionCommand(
-                request.userEmail(),
-                request.planName(),
+                request.userId(),
+                request.subscriptionType(),
                 request.price(),
                 request.status(),
                 request.startDate(),
@@ -81,10 +82,9 @@ public class SubscriptionController {
     @PutMapping("/{id}")
     public ResponseEntity<SubscriptionResponse> updateSubscription(
             @PathVariable Long id,
-            @Valid @RequestBody SubscriptionRequest request) {
+            @Valid @RequestBody UpdateSubscriptionRequest request) {
         var command = new UpdateSubscriptionUseCase.UpdateSubscriptionCommand(
-                request.userEmail(),
-                request.planName(),
+                request.subscriptionType(),
                 request.price(),
                 request.status(),
                 request.startDate(),

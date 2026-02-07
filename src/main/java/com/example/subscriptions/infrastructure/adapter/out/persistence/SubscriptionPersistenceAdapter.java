@@ -43,8 +43,8 @@ public class SubscriptionPersistenceAdapter implements SubscriptionRepositoryPor
     }
 
     @Override
-    public List<Subscription> findByUserEmail(String userEmail) {
-        return jpaRepository.findByUserEmail(userEmail).stream()
+    public List<Subscription> findByUserId(Long userId) {
+        return jpaRepository.findByUserId(userId).stream()
                 .map(mapper::toDomain)
                 .toList();
     }

@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface SubscriptionJpaRepository extends JpaRepository<SubscriptionJpaEntity, Long> {
 
-    List<SubscriptionJpaEntity> findByUserEmail(String userEmail);
+    List<SubscriptionJpaEntity> findByUserId(Long userId);
 
     List<SubscriptionJpaEntity> findByStatus(String status);
 }

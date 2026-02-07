@@ -11,7 +11,7 @@ public interface GetSubscriptionUseCase {
 
     Subscription getSubscriptionById(Long id);
 
-    List<Subscription> getSubscriptionsByUserEmail(String userEmail);
+    List<Subscription> getSubscriptionsByUserId(Long userId);
 
     List<Subscription> getSubscriptionsByStatus(SubscriptionStatus status);
 }
