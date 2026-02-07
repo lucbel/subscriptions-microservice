@@ -2,14 +2,15 @@ package com.example.subscriptions.infrastructure.adapter.in.web.dto;
 
 import com.example.subscriptions.domain.model.Subscription;
 import com.example.subscriptions.domain.model.SubscriptionStatus;
+import com.example.subscriptions.domain.model.SubscriptionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record SubscriptionResponse(
         Long id,
-        String userEmail,
-        String planName,
+        UserResponse user,
+        SubscriptionType subscriptionType,
         BigDecimal price,
         SubscriptionStatus status,
         LocalDateTime startDate,
@@ -20,8 +21,8 @@ public record SubscriptionResponse(
     public static SubscriptionResponse fromDomain(Subscription subscription) {
         return new SubscriptionResponse(
                 subscription.getId(),
-                subscription.getUserEmail(),
-                subscription.getPlanName(),
+                UserResponse.fromDomain(subscription.getUser()),
+                subscription.getSubscriptionType(),
                 subscription.getPrice(),
                 subscription.getStatus(),
                 subscription.getStartDate(),

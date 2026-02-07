@@ -2,46 +2,48 @@ package com.example.subscriptions.infrastructure.adapter.out.persistence.mapper;
 
 import com.example.subscriptions.domain.model.Subscription;
 import com.example.subscriptions.domain.model.SubscriptionStatus;
+import com.example.subscriptions.domain.model.SubscriptionType;
 import com.example.subscriptions.infrastructure.adapter.out.persistence.entity.SubscriptionJpaEntity;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
-@Component
-public class SubscriptionPersistenceMapper {
+@Mapper(componentModel = "spring", uses = {UserPersistenceMapper.class})
+public interface SubscriptionPersistenceMapper {
 
-    public Subscription toDomain(SubscriptionJpaEntity entity) {
-        if (entity == null) {
-            return null;
-        }
+    @Mapping(target = "subscriptionType", source = "subscriptionType", qualifiedByName = "stringToSubscriptionType")
+    @Mapping(target = "status", source = "status", qualifiedByName = "stringToSubscriptionStatus")
+    Subscription toDomain(SubscriptionJpaEntity entity);
 
-        return new Subscription(
-                entity.getId(),
-                entity.getUserEmail(),
-                entity.getPlanName(),
-                entity.getPrice(),
-                SubscriptionStatus.valueOf(entity.getStatus()),
-                entity.getStartDate(),
-                entity.getEndDate(),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
-        );
+    @Mapping(target = "subscriptionType", source = "subscriptionType", qualifiedByName = "subscriptionTypeToString")
+    @Mapping(target = "status", source = "status", qualifiedByName = "subscriptionStatusToString")
+    SubscriptionJpaEntity toEntity(Subscription domain);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "subscriptionType", source = "subscriptionType", qualifiedByName = "subscriptionTypeToString")
+    @Mapping(target = "status", source = "status", qualifiedByName = "subscriptionStatusToString")
+    void updateEntity(@MappingTarget SubscriptionJpaEntity entity, Subscription domain);
+
+    @Named("stringToSubscriptionType")
+    default SubscriptionType stringToSubscriptionType(String value) {
+        return value != null ? SubscriptionType.valueOf(value) : null;
     }
 
-    public SubscriptionJpaEntity toEntity(Subscription domain) {
-        if (domain == null) {
-            return null;
-        }
+    @Named("subscriptionTypeToString")
+    default String subscriptionTypeToString(SubscriptionType value) {
+        return value != null ? value.name() : null;
+    }
 
-        SubscriptionJpaEntity entity = new SubscriptionJpaEntity();
-        entity.setId(domain.getId());
-        entity.setUserEmail(domain.getUserEmail());
-        entity.setPlanName(domain.getPlanName());
-        entity.setPrice(domain.getPrice());
-        entity.setStatus(domain.getStatus().name());
-        entity.setStartDate(domain.getStartDate());
-        entity.setEndDate(domain.getEndDate());
-        entity.setCreatedAt(domain.getCreatedAt());
-        entity.setUpdatedAt(domain.getUpdatedAt());
+    @Named("stringToSubscriptionStatus")
+    default SubscriptionStatus stringToSubscriptionStatus(String value) {
+        return value != null ? SubscriptionStatus.valueOf(value) : null;
+    }
 
-        return entity;
+    @Named("subscriptionStatusToString")
+    default String subscriptionStatusToString(SubscriptionStatus value) {
+        return value != null ? value.name() : null;
     }
 }

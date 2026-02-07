@@ -1,10 +1,13 @@
 package com.example.subscriptions.application.service;
 
 import com.example.subscriptions.domain.exception.SubscriptionNotFoundException;
+import com.example.subscriptions.domain.exception.UserNotFoundException;
 import com.example.subscriptions.domain.model.Subscription;
 import com.example.subscriptions.domain.model.SubscriptionStatus;
+import com.example.subscriptions.domain.model.User;
 import com.example.subscriptions.domain.port.in.*;
 import com.example.subscriptions.domain.port.out.SubscriptionRepositoryPort;
+import com.example.subscriptions.domain.port.out.UserRepositoryPort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,16 +23,22 @@ public class SubscriptionService implements
         ManageSubscriptionStatusUseCase {
 
     private final SubscriptionRepositoryPort subscriptionRepository;
+    private final UserRepositoryPort userRepository;
 
-    public SubscriptionService(SubscriptionRepositoryPort subscriptionRepository) {
+    public SubscriptionService(SubscriptionRepositoryPort subscriptionRepository,
+                               UserRepositoryPort userRepository) {
         this.subscriptionRepository = subscriptionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Subscription createSubscription(CreateSubscriptionCommand command) {
+        User user = userRepository.findById(command.userId())
+                .orElseThrow(() -> new UserNotFoundException(command.userId()));
+
         Subscription subscription = Subscription.create(
-                command.userEmail(),
-                command.planName(),
+                user,
+                command.subscriptionType(),
                 command.price(),
                 command.startDate(),
                 command.endDate()
@@ -57,8 +66,8 @@ public class SubscriptionService implements
 
     @Override
     @Transactional(readOnly = true)
-    public List<Subscription> getSubscriptionsByUserEmail(String userEmail) {
-        return subscriptionRepository.findByUserEmail(userEmail);
+    public List<Subscription> getSubscriptionsByUserId(Long userId) {
+        return subscriptionRepository.findByUserId(userId);
     }
 
     @Override
@@ -72,8 +81,7 @@ public class SubscriptionService implements
         Subscription subscription = getSubscriptionById(id);
 
         subscription.update(
-                command.userEmail(),
-                command.planName(),
+                command.subscriptionType(),
                 command.price(),
                 command.status(),
                 command.startDate(),

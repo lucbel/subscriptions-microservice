@@ -14,7 +14,7 @@ public interface SubscriptionRepositoryPort {
 
     List<Subscription> findAll();
 
-    List<Subscription> findByUserEmail(String userEmail);
+    List<Subscription> findByUserId(Long userId);
 
     List<Subscription> findByStatus(SubscriptionStatus status);
 
